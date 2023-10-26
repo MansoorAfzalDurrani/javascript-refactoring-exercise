@@ -1,52 +1,82 @@
-var txr = [];
+//var txr = []; // No Need to define  Globally...
 
 function processTransactions(transActions) {
-
-    txr = [];
-
-    if(!validateTransactions(transActions)) {
+  
+    if(!transActions) {
         throw new Error("Undefined collection of transactions")
-    }
+    } 
 
-    let txCount = {}
+    const transactionCount = countTransactions(transActions) ; 
 
+    const sortedTransactions = sortTransactions(transactionCount);
+
+    return formatedTransactions(sortedTransactions,transactionCount);
+}
+
+function countTransactions(transActions){
+   
+    const transactionObject={};
+
+    transActions.forEach((value)=>{
+        transactionObject[value]=(transactionObject[value] || 0) +1;
+      
+    });
+    return transactionObject
+}
+
+function sortTransactions(transactionObject) {
+    return Object.keys(transactionObject).sort((a, b) =>transactionObject[b] - transactionObject[a] || a.localeCompare(b)
+    );
+} 
+function formatedTransactions(sortedTransactions, transactionCount) {
+    return sortedTransactions.map((transaction) => `${transaction} ${transactionCount[transaction]}`);
+}
+
+
+
+
+
+
+
+    /*
     const numberOfTransactions = transActions.length;
 
     for(var i = 0; i < numberOfTransactions; i++) {
         const transaction = transActions[i];
         txCount[transaction] ? txCount[transaction] += 1 : txCount[transaction] = 1;
-    }
-
-    txCount = sortByAmountThenName(txCount);
+    } */ // Function Wrote for these statements
     
+ /*
+    orderedTransactions= sortByAmountThenName(transactionCount);
+   // console.log(orderedTransactions);
     // Place them back in array for returning
-    Object.keys(txCount).forEach(function (key, index) {
-        txr[index] = `${key} ${txCount[key]}`;
+    Object.keys(transactionCount).forEach(function (key, index) {
+        transactionCount[index] = `${key} ${transactionCount[key]}`;
     });
 
-    return txr;
+    return orderedTransactions;
 }
+/*
 
-function sortByAmountThenName(txCount) {
-    let sortedKeys = Object.keys(txCount).sort(function sortingFunction(itemOne, itemTwo) {
-        return  txCount[itemTwo] - txCount[itemOne] || itemOne > itemTwo || -(itemOne < itemTwo)}
+function sortByAmountThenName(transactionCount) {
+    let sortedKeys = Object.keys(transactionCount).sort(function sortingFunction(itemOne, itemTwo) {
+        return  transactionCount[itemTwo] - transactionCount[itemOne] || itemOne > itemTwo || -(itemOne < itemTwo)}
     );
 
     let sortedResults = {};
     for(let objectKey of sortedKeys) {
-        sortedResults[objectKey] = txCount[objectKey];
+        sortedResults[objectKey] = transactionCount[objectKey];
     }
 
     return sortedResults;
 }
 
-
+/*
 function validateTransactions(transactions) {
+    
     if(transactions === undefined) {
         return false;
     } 
-
-    return true;
-}
+}*/
 
 module.exports = processTransactions;
